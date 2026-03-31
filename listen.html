@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Listen | Alternativenergy</title>
+
+  <style>
+    :root{
+      --bg: #e24d2c;
+      --panel: rgba(0,0,0,0.18);
+      --panel2: rgba(0,0,0,0.28);
+      --white: #fff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--white);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ===== HEADER: seamless, moderate size, side-by-side ===== */
+    header.top {
+      width: 100%;
+      padding: 16px 18px 8px;
+    }
+
+    .header-row{
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .header-row a,
+    .header-row .img-wrap{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .header-img{
+      height: 230px;          /* MODERATE size */
+      width: auto;
+      display: block;
+      object-fit: contain;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+
+.right-header-img{
+  height: 300px;  /* bump this number up/down */
+  width: auto;
+}
+
+    @media (max-width: 520px){
+      .header-img{ height: 150px; }
+      .header-row{ gap: 12px; }
+      header.top{ padding: 14px 14px 6px; }
+    }
+
+/* LiveWire description under logos */
+.livewire-desc{
+  max-width: 980px;
+  margin: 6px auto 0;
+  padding: 0 18px 10px;
+  text-align: center;
+  font-family: "Helvetica Condensed", "Helvetica Neue Condensed", "HelveticaNeue-Condensed", "Arial Narrow", Helvetica, Arial, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: rgba(255,255,255,0.95);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+}
+
+/* Tag filter bubbles */
+.tag-filter-wrap{
+  max-width: 980px;
+  margin: 8px auto 0;
+  padding: 0 18px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.tag-bubble{
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.24);
+  background: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.96);
+  border-radius: 999px;
+  padding: 8px;         /* tight bubble */
+min-width: 0;         /* don’t force extra width */
+border-radius: 999px; /* keep it pill/circle */
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, filter 140ms ease, box-shadow 140ms ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+}
+
+.tag-bubble{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tag-icon{
+  height: 83px;
+  width: auto;
+  display: block;
+}
+
+.tag-bubble:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  background: rgba(255,255,255,0.20);
+}
+
+.tag-bubble.active{
+  background: rgba(255,255,255,0.28);
+  border-color: rgba(255,255,255,0.40);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.20);
+}
+
+.tag-bubble[data-tag-filter="all"]{
+  background: rgba(255,255,255,0.18);
+padding: 8px 22px;
+}
+
+.playlist-card.is-hidden{
+  display: none;
+}
+
+/* Selected genre header (shows after clicking an icon) */
+.genre-header{
+  max-width: 980px;
+  margin: 27px auto 0px;
+  padding: 0 18px 6px;
+  display: none;            /* hidden until a genre is clicked */
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.genre-header.show{
+  display: flex;
+}
+
+.genre-title{
+  margin: 0 0 6px;
+font-family: Helvetica;
+  font-weight: 900;
+  font-size: 1.9rem;
+  letter-spacing: 0.2px;
+  color: rgba(255,255,255,0.96);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
+.genre-icon-big{
+  height: 250px;   /* make this bigger/smaller */
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.25));
+}
+
+/* --- Genre pop-in animation --- */
+.genre-icon-big{
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+/* when a genre is selected, animate the big icon */
+.genre-header.show .genre-icon-big{
+  animation: genreIconPop 520ms cubic-bezier(.2,.9,.2,1) both;
+}
+
+/* optional: animate the title too, slightly */
+.genre-header.show .genre-title{
+  animation: genreTitleSlide 420ms cubic-bezier(.2,.9,.2,1) both;
+}
+
+@keyframes genreIconPop{
+  0%   { opacity: 0; transform: translateY(18px) scale(0.72); }
+  65%  { opacity: 1; transform: translateY(0px)  scale(1.06); }
+  100% { opacity: 1; transform: translateY(0px)  scale(1.00); }
+}
+
+@keyframes genreTitleSlide{
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0px); }
+}
+
+/* accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .genre-header.show .genre-icon-big,
+  .genre-header.show .genre-title{
+    animation: none !important;
+  }
+}
+
+    /* ===== MAIN LAYOUT ===== */
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 18px 46px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Single playlist */
+    .playlist-card {
+      width: min(720px, 96vw);
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.30);
+      cursor: pointer;
+      transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+      outline: none;
+    }
+
+    .playlist-card:hover { transform: translateY(-2px); }
+
+    /* “lights up / gets brighter” */
+    .playlist-card.active {
+      filter: brightness(1.18) saturate(1.06);
+      box-shadow: 0 18px 56px rgba(0,0,0,0.42);
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .playlist-art {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+    }
+
+    .playlist-label {
+      margin: 12px 2px 0;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .playlist-name {
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      font-size: 1.15rem;
+      margin: 0;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .playlist-hint {
+      margin: 0;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.82);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 520px){
+      .playlist-hint { display: none; }
+    }
+
+    /* ===== MODAL ===== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 999;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: min(560px, 96vw);
+      border-radius: 18px;
+      background: rgba(15,15,15,0.92);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 22px 80px rgba(0,0,0,0.55);
+      padding: 18px;
+    }
+
+    .modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .close-btn {
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.92);
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease;
+    }
+
+    .close-btn:hover { transform: scale(1.03); background: rgba(255,255,255,0.12); }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--panel2);
+      border: 1px solid rgba(255,255,255,0.16);
+      text-decoration: none;
+      color: rgba(255,255,255,0.95);
+      font-weight: 700;
+      transition: transform 140ms ease, filter 140ms ease, background 140ms ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      background: rgba(255,255,255,0.10);
+    }
+
+    .choice small {
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+@media (max-width: 520px){
+  .home-playlist-hint{ display: none; }
+  .home-playlist-wrap{ margin: 1.4rem auto 1.6rem; }
+}
+
+/* Modal */
+.home-modal-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 9999;
+}
+
+.home-modal-backdrop.open{ display: flex; }
+
+.home-modal{
+  width: min(560px, 96vw);
+  border-radius: 16px;
+  background: rgba(245, 243, 234, 0.98);
+  border: 1px solid rgba(10, 12, 24, 0.18);
+  box-shadow: 0 22px 70px rgba(0,0,0,0.30);
+  padding: 16px;
+}
+
+.home-modal-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.home-modal-title{
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  color: #0a0c18;
+}
+
+.home-close-btn{
+  border: 1px solid rgba(10, 12, 24, 0.25);
+  background: transparent;
+  color: #0a0c18;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.home-choices{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.home-choice{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(10, 12, 24, 0.06);
+  border: 1px solid rgba(10, 12, 24, 0.14);
+  text-decoration: none;
+  color: #0a0c18;
+  font-weight: 700;
+}
+
+.home-choice:hover{
+  filter: brightness(1.04);
+}
+
+.home-choice small{
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+/* Force the genre pop-up title font */
+#genreTitle,
+#genreTitle strong{
+  font-family: Helvetica !important;
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- Header images (moderate size, seamless, side-by-side) -->
+  <header class="top">
+    <div class="header-row">
+      <a href="index.html" aria-label="Go home">
+        <img class="header-img" src="images/ChomskyAE3.png" alt="Alternativenergy header graphic">
+      </a>
+
+      <span class="img-wrap" aria-hidden="true">
+        <img class="header-img right-header-img" src="images/CityLights.png" alt="City lights header graphic">
+      </span>
+    </div>
+  </header>
+
+<p class="livewire-desc">
+  LiveWire Radio is the official music discovery platform of AlternativEnergy. Explore curated playlists by artists, internet personalities, and creatives from all over the world.
+</p>
+
+<div class="tag-filter-wrap" aria-label="Filter playlists by genre tag">
+  <button class="tag-bubble active" type="button" data-tag-filter="all" aria-label="All">All</button>
+
+  <button class="tag-bubble" type="button" data-tag-filter="hyperpop" aria-label="Hyperpop">
+    <img class="tag-icon" src="images/CityLive.png" alt="Hyperpop">
+  </button>
+
+  <button class="tag-bubble" type="button" data-tag-filter="underground-rap" aria-label="Underground Rap">
+    <img class="tag-icon" src="images/UnderLive.png" alt="Underground Rap">
+  </button>
+
+  <button class="tag-bubble" type="button" data-tag-filter="rock" aria-label="Rock">
+    <img class="tag-icon" src="images/SipderLive.png" alt="Rock">
+  </button>
+
+  <button class="tag-bubble" type="button" data-tag-filter="dance" aria-label="Dance">
+    <img class="tag-icon" src="images/GunsLive.png" alt="Dance">
+  </button>
+
+  <button class="tag-bubble" type="button" data-tag-filter="indie" aria-label="Indie">
+    <img class="tag-icon" src="images/FreeLive.png" alt="Indie">
+  </button>
+</div>
+
+<div class="genre-header" id="genreHeader" aria-live="polite">
+  <p class="genre-title" id="genreTitle"></p>
+  <img class="genre-icon-big" id="genreIconBig" src="" alt="">
+</div>
+
+<!-- One big playlist -->
+<main class="wrap">
+  <div
+    class="playlist-card"
+    id="playlistCardFishFace"
+    data-tag="dance"
+    role="button"
+    tabindex="0"
+    aria-haspopup="dialog"
+    aria-controls="playlistModalFishFace"
+    aria-label="Open LORD FISH FACE LiveWire links"
+  >
+    <img class="playlist-art" src="images/LWff.png" alt="LORD FISH FACE LiveWire playlist cover">
+
+    <div class="playlist-label">
+      <p class="playlist-name">LORD FISH FACE LiveWire</p>
+      <p class="playlist-hint">Click to open links</p>
+    </div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modalBackdropFishFace" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleFishFace" id="playlistModalFishFace">
+    <div class="modal-top">
+      <h2 class="modal-title" id="modalTitleFishFace">LORD FISH FACE LiveWire</h2>
+      <button class="close-btn" id="closeBtnFishFace" type="button" aria-label="Close">Close</button>
+    </div>
+
+    <div class="choices">
+      <!-- REPLACE THESE LINKS -->
+      <a class="choice" href="https://open.spotify.com/playlist/5BVjFzWpFZrKda8yKqJgf9?si=Ej7aDUx_RaWKmfL0gY-mFg" target="_blank" rel="noopener">
+        Spotify <small>opens in a new tab</small>
+      </a>
+      <a class="choice" href="https://soundcloud.com/anthzumi/sets/lord-fish-face-livewire?si=ba39c86ec6cf4df6b6d29464078264a7&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener">
+        SoundCloud <small>opens in a new tab</small>
+      </a>
+    </div>
+  </div>
+</div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCard1800Chains"
+      data-tag="underground-rap"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModal1800Chains"
+      aria-label="Open 1800Chains LiveWire links"
+    >
+      <img class="playlist-art" src="images/LW18.png" alt="1800Chains LiveWire playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">1800Chains LiveWire</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop1800Chains" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle1800Chains" id="playlistModal1800Chains">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitle1800Chains">1800Chains LiveWire</h2>
+        <button class="close-btn" id="closeBtn1800Chains" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <a class="choice" href="https://open.spotify.com/playlist/27lNik27x717wJ0MT4yy1Y?si=BrY8GY5QRAur1-AqyIdL5g" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://music.apple.com/us/playlist/1800-livewire/pl.u-WabZzmahWPyz55" target="_blank" rel="noopener">
+          Apple Music <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardHauntore"
+      data-tag="hyperpop"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalHauntore"
+      aria-label="Open Hauntore LiveWire links"
+    >
+      <img class="playlist-art" src="images/LWht.png" alt="Hauntore LiveWire playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">Hauntore LiveWire</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdropHauntore" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleHauntore" id="playlistModalHauntore">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleHauntore">Hauntore LiveWire</h2>
+        <button class="close-btn" id="closeBtnHauntore" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <a class="choice" href="https://open.spotify.com/playlist/3MD6lOfIbt4ugZFWRWSUsZ?si=mYlOjIpQREOI0PfTM36pBQ" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://music.apple.com/us/playlist/hauntore-live-wire/pl.u-76oNPbetWNEv7Kr" target="_blank" rel="noopener">
+          Apple Music <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://soundcloud.com/anthzumi/sets/hauntore-live-wire?si=89a91ff541c54543b4a94d8dc6c121fd&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener">
+          SoundCloud <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardJE8"
+      data-tag="rock"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalJE8"
+      aria-label="Open Johnny Echo LiveWire ###8 links"
+    >
+      <img class="playlist-art" src="images/LWje.png" alt="Johnny Echo LiveWire ###8 playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">Johnny Echo LiveWire</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdropJE8" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleJE8" id="playlistModalJE8">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleJE8">Johnny Echo LiveWire ###8</h2>
+        <button class="close-btn" id="closeBtnJE8" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <a class="choice" href="https://open.spotify.com/playlist/2telPLGieFQBOSAnxYRvjk?si=4kyol9L2Quie8-SAcPbUTQ" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardAE7"
+      data-tag="rock"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalAE7"
+      aria-label="Open Alternative Endeavours LiveWire ##7 links"
+    >
+      <img class="playlist-art" src="images/LWae.png" alt="Alternative Endeavours LiveWire ##7 playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">Alternative Endeavours LiveWire ##7</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal (put your real link in the href="...") -->
+  <div class="modal-backdrop" id="modalBackdropAE7" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleAE7" id="playlistModalAE7">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleAE7">Alternative Endeavours LiveWire ##7</h2>
+        <button class="close-btn" id="closeBtnAE7" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <!-- PASTE YOUR REAL SPOTIFY LINK BELOW -->
+        <a class="choice" href="https://open.spotify.com/playlist/20ZkYKQL9nNDvasd45OEak?si=rNgEz8GsTAu-0IObbLsj8Q" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardBoyydinner6"
+      data-tag="underground-rap"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalBoyydinner6"
+      aria-label="Open boyydinner LiveWire ##6 links"
+    >
+      <img class="playlist-art" src="images/LWbd.png" alt="boyydinner LiveWire ##6 playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">boyydinner LiveWire ##6</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal (put your real links in the href="...") -->
+  <div class="modal-backdrop" id="modalBackdropBoyydinner6" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleBoyydinner6" id="playlistModalBoyydinner6">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleBoyydinner6">boyydinner LiveWire ##6</h2>
+        <button class="close-btn" id="closeBtnBoyydinner6" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <!-- PASTE YOUR REAL LINKS BELOW -->
+        <a class="choice" href="https://open.spotify.com/playlist/0sW2lNOeQAAIlV23GgJSFe?si=hafKp3_ER9C0esVR01K4AQ" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://soundcloud.com/anthzumi/sets/boyydinner-livewire/s-HUmJwwdwZgv?si=ad94bb5c04054a14953ade71d58f8b04&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener">
+          SoundCloud <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://www.youtube.com/playlist?list=PLUdMJJUCpc7K6yQlBlXuAcEjiMF9RdjA2" target="_blank" rel="noopener">
+          YouTube <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardCr6wns"
+      data-tag="hyperpop"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalCr6wns"
+      aria-label="Open cr6wns LiveWire links"
+    >
+      <!-- LWcwn.png -->
+      <img class="playlist-art" src="images/LWcwn.png" alt="cr6wns LiveWire playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">cr6wns LiveWire</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal (put your real links in the href="...") -->
+  <div class="modal-backdrop" id="modalBackdropCr6wns" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleCr6wns" id="playlistModalCr6wns">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleCr6wns">cr6wns LiveWire</h2>
+        <button class="close-btn" id="closeBtnCr6wns" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <!-- PASTE YOUR REAL LINKS BELOW -->
+        <a class="choice" href="https://open.spotify.com/playlist/4EGii3047WVIXAK771sdbH?si=3XxG19r6Qvu3uHXHUe4gxQ" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://on.soundcloud.com/xGWaoA70XypXfGBqTW" target="_blank" rel="noopener">
+          SoundCloud <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardFlowkoyo"
+      data-tag="indie"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalFlowkoyo"
+      aria-label="Open Flowkoyo links"
+    >
+      <img class="playlist-art" src="images/flowkoyo.png" alt="Flowkoyo playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">Flowkoyo</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal (put your real links in the href="...") -->
+  <div class="modal-backdrop" id="modalBackdropFlowkoyo" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleFlowkoyo" id="playlistModalFlowkoyo">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleFlowkoyo">Flowkoyo</h2>
+        <button class="close-btn" id="closeBtnFlowkoyo" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <!-- PASTE YOUR REAL LINKS BELOW -->
+        <a class="choice" href="https://open.spotify.com/playlist/4BjECz6vc4Bs03KMopBbwh?si=wscHttqDSNOL2PqEEe0SQQ" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://music.apple.com/us/playlist/livewire/pl.u-LdbqEoBFxAVpWvb" target="_blank" rel="noopener">
+          Apple Music <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+<!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardEN"
+      data-tag="underground-rap"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalEN"
+      aria-label="Open Experience Nebula LiveWire links"
+    >
+      <img class="playlist-art" src="images/ENLW.png" alt="Experience Nebula LiveWire playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">Experience Nebula LiveWire</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal (put your real link in the href="...") -->
+  <div class="modal-backdrop" id="modalBackdropEN" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleEN" id="playlistModalEN">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleEN">Experience Nebula LiveWire</h2>
+        <button class="close-btn" id="closeBtnEN" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <!-- PASTE YOUR REAL SPOTIFY LINK BELOW -->
+        <a class="choice" href="https://open.spotify.com/playlist/6VfKx63HMi8WAMr8nKhTuB?si=iYIIBkPNQWmNOFe3jU9i4g" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCardMandeaux"
+      data-tag="dance"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModalMandeaux"
+      aria-label="Open Mandeaux LiveWire links"
+    >
+      <img class="playlist-art" src="images/MLV.png" alt="Mandeaux LiveWire playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">Mandeaux LiveWire</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal (put your real links in the href="...") -->
+  <div class="modal-backdrop" id="modalBackdropMandeaux" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitleMandeaux" id="playlistModalMandeaux">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitleMandeaux">Mandeaux LiveWire</h2>
+        <button class="close-btn" id="closeBtnMandeaux" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <!-- PASTE YOUR REAL LINKS BELOW -->
+        <a class="choice" href="https://open.spotify.com/playlist/7J7kiqxqtgphlfNBXX6eqB" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://soundcloud.com/anthzumi/sets/livewire" target="_blank" rel="noopener">
+          SoundCloud <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- One big playlist -->
+  <main class="wrap">
+    <div
+      class="playlist-card"
+      id="playlistCard"
+      data-tag="dance"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-controls="playlistModal"
+      aria-label="Open LiveWireVirgoes links"
+    >
+      <img class="playlist-art" src="images/LiveWireVirgoes.png" alt="LiveWireVirgoes playlist cover">
+
+      <div class="playlist-label">
+        <p class="playlist-name">LiveWireVirgoes</p>
+        <p class="playlist-hint">Click to open links</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal (put your real links in the href="...") -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" id="playlistModal">
+      <div class="modal-top">
+        <h2 class="modal-title" id="modalTitle">LiveWireVirgoes</h2>
+        <button class="close-btn" id="closeBtn" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <div class="choices">
+        <!-- PASTE YOUR REAL LINKS BELOW -->
+        <a class="choice" href="https://open.spotify.com/playlist/0veBYnByns4erprRzTI82U?si=17-1_vYgS9G8CFJC87N-3w" target="_blank" rel="noopener">
+          Spotify <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://music.apple.com/us/playlist/virgoes-livewire/pl.u-WabZ6RaHe3eAZ7y" target="_blank" rel="noopener">
+          Apple Music <small>opens in a new tab</small>
+        </a>
+        <a class="choice" href="https://soundcloud.com/anthzumi/sets/virgoes-livewire?si=554c939d72f94affb6a886cf09b68c9e&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener">
+          SoundCloud <small>opens in a new tab</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+        const tagBubbles = document.querySelectorAll('.tag-bubble');
+    const allPlaylistCards = document.querySelectorAll('.playlist-card[data-tag]');
+
+    const genreHeader = document.getElementById('genreHeader');
+    const genreTitle = document.getElementById('genreTitle');
+    const genreIconBig = document.getElementById('genreIconBig');
+
+    const GENRE_META = {
+      "hyperpop": { label: "Hyperpop", icon: "images/CityLive.png" },
+      "dance": { label: "Dance", icon: "images/GunsLive.png" },
+      "rock": { label: "Rock", icon: "images/SipderLive.png" },
+      "indie": { label: "Indie", icon: "images/FreeLive.png" },
+      "underground-rap": { label: "Underground Rap", icon: "images/UnderLive.png" },
+      "all": { label: "All", icon: "" }
+    };
+
+    function updateGenreHeader(selectedTag) {
+      if (selectedTag === 'all') {
+        genreHeader.classList.remove('show');
+        genreTitle.textContent = "";
+        genreIconBig.src = "";
+        genreIconBig.alt = "";
+        return;
+      }
+
+      const meta = GENRE_META[selectedTag];
+      if (!meta) return;
+
+      genreTitle.innerHTML = "<strong>" + meta.label + "</strong>";
+      genreIconBig.src = meta.icon;
+      genreIconBig.alt = meta.label + " icon";
+      // re-trigger animation every time
+genreHeader.classList.remove('show');
+void genreHeader.offsetWidth; // forces reflow so animation restarts
+genreHeader.classList.add('show');
+    }
+
+    function filterPlaylists(selectedTag) {
+      allPlaylistCards.forEach((card) => {
+        const cardTag = card.dataset.tag;
+
+        if (selectedTag === 'all' || cardTag === selectedTag) {
+          card.classList.remove('is-hidden');
+        } else {
+          card.classList.remove('active');
+          card.classList.add('is-hidden');
+        }
+      });
+
+
+      tagBubbles.forEach((bubble) => {
+        const isActive = bubble.dataset.tagFilter === selectedTag;
+        bubble.classList.toggle('active', isActive);
+      });
+
+updateGenreHeader(selectedTag);
+    }
+
+    tagBubbles.forEach((bubble) => {
+      bubble.addEventListener('click', () => {
+        filterPlaylists(bubble.dataset.tagFilter);
+      });
+    });
+
+    const cardJE8 = document.getElementById('playlistCardJE8');
+    const backdropJE8 = document.getElementById('modalBackdropJE8');
+    const closeBtnJE8 = document.getElementById('closeBtnJE8');
+
+    function openModalJE8() {
+      cardJE8.classList.add('active');
+      backdropJE8.classList.add('open');
+      backdropJE8.setAttribute('aria-hidden', 'false');
+      closeBtnJE8.focus();
+    }
+
+    function closeModalJE8() {
+      cardJE8.classList.remove('active');
+      backdropJE8.classList.remove('open');
+      backdropJE8.setAttribute('aria-hidden', 'true');
+      cardJE8.focus();
+    }
+
+    cardJE8.addEventListener('click', openModalJE8);
+
+    cardJE8.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalJE8();
+      }
+    });
+
+    closeBtnJE8.addEventListener('click', closeModalJE8);
+
+    backdropJE8.addEventListener('click', (e) => {
+      if (e.target === backdropJE8) closeModalJE8();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropJE8.classList.contains('open')) {
+        closeModalJE8();
+      }
+    });
+
+const cardFishFace = document.getElementById('playlistCardFishFace');
+const backdropFishFace = document.getElementById('modalBackdropFishFace');
+const closeBtnFishFace = document.getElementById('closeBtnFishFace');
+
+function openModalFishFace() {
+  cardFishFace.classList.add('active');
+  backdropFishFace.classList.add('open');
+  backdropFishFace.setAttribute('aria-hidden', 'false');
+  closeBtnFishFace.focus();
+}
+
+function closeModalFishFace() {
+  cardFishFace.classList.remove('active');
+  backdropFishFace.classList.remove('open');
+  backdropFishFace.setAttribute('aria-hidden', 'true');
+  cardFishFace.focus();
+}
+
+cardFishFace.addEventListener('click', openModalFishFace);
+
+cardFishFace.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openModalFishFace();
+  }
+});
+
+closeBtnFishFace.addEventListener('click', closeModalFishFace);
+
+backdropFishFace.addEventListener('click', (e) => {
+  if (e.target === backdropFishFace) closeModalFishFace();
+});
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && backdropFishFace.classList.contains('open')) {
+    closeModalFishFace();
+  }
+});
+
+    const cardHauntore = document.getElementById('playlistCardHauntore');
+    const backdropHauntore = document.getElementById('modalBackdropHauntore');
+    const closeBtnHauntore = document.getElementById('closeBtnHauntore');
+
+    function openModalHauntore() {
+      cardHauntore.classList.add('active');
+      backdropHauntore.classList.add('open');
+      backdropHauntore.setAttribute('aria-hidden', 'false');
+      closeBtnHauntore.focus();
+    }
+
+    function closeModalHauntore() {
+      cardHauntore.classList.remove('active');
+      backdropHauntore.classList.remove('open');
+      backdropHauntore.setAttribute('aria-hidden', 'true');
+      cardHauntore.focus();
+    }
+
+    cardHauntore.addEventListener('click', openModalHauntore);
+
+    cardHauntore.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalHauntore();
+      }
+    });
+
+    closeBtnHauntore.addEventListener('click', closeModalHauntore);
+
+    backdropHauntore.addEventListener('click', (e) => {
+      if (e.target === backdropHauntore) closeModalHauntore();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropHauntore.classList.contains('open')) {
+        closeModalHauntore();
+      }
+    });
+
+    const card1800Chains = document.getElementById('playlistCard1800Chains');
+    const backdrop1800Chains = document.getElementById('modalBackdrop1800Chains');
+    const closeBtn1800Chains = document.getElementById('closeBtn1800Chains');
+
+    function openModal1800Chains() {
+      card1800Chains.classList.add('active');
+      backdrop1800Chains.classList.add('open');
+      backdrop1800Chains.setAttribute('aria-hidden', 'false');
+      closeBtn1800Chains.focus();
+    }
+
+    function closeModal1800Chains() {
+      card1800Chains.classList.remove('active');
+      backdrop1800Chains.classList.remove('open');
+      backdrop1800Chains.setAttribute('aria-hidden', 'true');
+      card1800Chains.focus();
+    }
+
+    card1800Chains.addEventListener('click', openModal1800Chains);
+
+    card1800Chains.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal1800Chains();
+      }
+    });
+
+    closeBtn1800Chains.addEventListener('click', closeModal1800Chains);
+
+    backdrop1800Chains.addEventListener('click', (e) => {
+      if (e.target === backdrop1800Chains) closeModal1800Chains();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdrop1800Chains.classList.contains('open')) {
+        closeModal1800Chains();
+      }
+    });
+
+    const cardFlowkoyo = document.getElementById('playlistCardFlowkoyo');
+    const backdropFlowkoyo = document.getElementById('modalBackdropFlowkoyo');
+    const closeBtnFlowkoyo = document.getElementById('closeBtnFlowkoyo');
+
+    function openModalFlowkoyo() {
+      cardFlowkoyo.classList.add('active');
+      backdropFlowkoyo.classList.add('open');
+      backdropFlowkoyo.setAttribute('aria-hidden', 'false');
+      closeBtnFlowkoyo.focus();
+    }
+
+    function closeModalFlowkoyo() {
+      cardFlowkoyo.classList.remove('active');
+      backdropFlowkoyo.classList.remove('open');
+      backdropFlowkoyo.setAttribute('aria-hidden', 'true');
+      cardFlowkoyo.focus();
+    }
+
+    cardFlowkoyo.addEventListener('click', openModalFlowkoyo);
+
+    cardFlowkoyo.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalFlowkoyo();
+      }
+    });
+
+    closeBtnFlowkoyo.addEventListener('click', closeModalFlowkoyo);
+
+    backdropFlowkoyo.addEventListener('click', (e) => {
+      if (e.target === backdropFlowkoyo) closeModalFlowkoyo();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropFlowkoyo.classList.contains('open')) {
+        closeModalFlowkoyo();
+      }
+    });
+
+    const cardBoyydinner6 = document.getElementById('playlistCardBoyydinner6');
+    const backdropBoyydinner6 = document.getElementById('modalBackdropBoyydinner6');
+    const closeBtnBoyydinner6 = document.getElementById('closeBtnBoyydinner6');
+
+    function openModalBoyydinner6() {
+      cardBoyydinner6.classList.add('active');
+      backdropBoyydinner6.classList.add('open');
+      backdropBoyydinner6.setAttribute('aria-hidden', 'false');
+      closeBtnBoyydinner6.focus();
+    }
+
+    function closeModalBoyydinner6() {
+      cardBoyydinner6.classList.remove('active');
+      backdropBoyydinner6.classList.remove('open');
+      backdropBoyydinner6.setAttribute('aria-hidden', 'true');
+      cardBoyydinner6.focus();
+    }
+
+    cardBoyydinner6.addEventListener('click', openModalBoyydinner6);
+
+    cardBoyydinner6.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalBoyydinner6();
+      }
+    });
+
+    closeBtnBoyydinner6.addEventListener('click', closeModalBoyydinner6);
+
+    backdropBoyydinner6.addEventListener('click', (e) => {
+      if (e.target === backdropBoyydinner6) closeModalBoyydinner6();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropBoyydinner6.classList.contains('open')) {
+        closeModalBoyydinner6();
+      }
+    });
+
+    const cardAE7 = document.getElementById('playlistCardAE7');
+    const backdropAE7 = document.getElementById('modalBackdropAE7');
+    const closeBtnAE7 = document.getElementById('closeBtnAE7');
+
+    function openModalAE7() {
+      cardAE7.classList.add('active');
+      backdropAE7.classList.add('open');
+      backdropAE7.setAttribute('aria-hidden', 'false');
+      closeBtnAE7.focus();
+    }
+
+    function closeModalAE7() {
+      cardAE7.classList.remove('active');
+      backdropAE7.classList.remove('open');
+      backdropAE7.setAttribute('aria-hidden', 'true');
+      cardAE7.focus();
+    }
+
+    cardAE7.addEventListener('click', openModalAE7);
+
+    cardAE7.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalAE7();
+      }
+    });
+
+    closeBtnAE7.addEventListener('click', closeModalAE7);
+
+    backdropAE7.addEventListener('click', (e) => {
+      if (e.target === backdropAE7) closeModalAE7();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropAE7.classList.contains('open')) {
+        closeModalAE7();
+      }
+    });
+
+    const cardMandeaux = document.getElementById('playlistCardMandeaux');
+    const backdropMandeaux = document.getElementById('modalBackdropMandeaux');
+    const closeBtnMandeaux = document.getElementById('closeBtnMandeaux');
+
+    function openModalMandeaux() {
+      cardMandeaux.classList.add('active');              // makes it brighter
+      backdropMandeaux.classList.add('open');            // shows modal
+      backdropMandeaux.setAttribute('aria-hidden', 'false');
+      closeBtnMandeaux.focus();
+    }
+
+    function closeModalMandeaux() {
+      cardMandeaux.classList.remove('active');
+      backdropMandeaux.classList.remove('open');
+      backdropMandeaux.setAttribute('aria-hidden', 'true');
+      cardMandeaux.focus();
+    }
+
+    cardMandeaux.addEventListener('click', openModalMandeaux);
+
+    cardMandeaux.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalMandeaux();
+      }
+    });
+
+    closeBtnMandeaux.addEventListener('click', closeModalMandeaux);
+
+    backdropMandeaux.addEventListener('click', (e) => {
+      if (e.target === backdropMandeaux) closeModalMandeaux();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropMandeaux.classList.contains('open')) {
+        closeModalMandeaux();
+      }
+    });
+
+    const cardEN = document.getElementById('playlistCardEN');
+    const backdropEN = document.getElementById('modalBackdropEN');
+    const closeBtnEN = document.getElementById('closeBtnEN');
+
+    function openModalEN() {
+      cardEN.classList.add('active');
+      backdropEN.classList.add('open');
+      backdropEN.setAttribute('aria-hidden', 'false');
+      closeBtnEN.focus();
+    }
+
+    function closeModalEN() {
+      cardEN.classList.remove('active');
+      backdropEN.classList.remove('open');
+      backdropEN.setAttribute('aria-hidden', 'true');
+      cardEN.focus();
+    }
+
+    cardEN.addEventListener('click', openModalEN);
+
+    cardEN.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalEN();
+      }
+    });
+
+    closeBtnEN.addEventListener('click', closeModalEN);
+
+    backdropEN.addEventListener('click', (e) => {
+      if (e.target === backdropEN) closeModalEN();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropEN.classList.contains('open')) {
+        closeModalEN();
+      }
+    });
+
+    const cardCr6wns = document.getElementById('playlistCardCr6wns');
+    const backdropCr6wns = document.getElementById('modalBackdropCr6wns');
+    const closeBtnCr6wns = document.getElementById('closeBtnCr6wns');
+
+    function openModalCr6wns() {
+      cardCr6wns.classList.add('active');
+      backdropCr6wns.classList.add('open');
+      backdropCr6wns.setAttribute('aria-hidden', 'false');
+      closeBtnCr6wns.focus();
+    }
+
+    function closeModalCr6wns() {
+      cardCr6wns.classList.remove('active');
+      backdropCr6wns.classList.remove('open');
+      backdropCr6wns.setAttribute('aria-hidden', 'true');
+      cardCr6wns.focus();
+    }
+
+    cardCr6wns.addEventListener('click', openModalCr6wns);
+
+    cardCr6wns.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModalCr6wns();
+      }
+    });
+
+    closeBtnCr6wns.addEventListener('click', closeModalCr6wns);
+
+    backdropCr6wns.addEventListener('click', (e) => {
+      if (e.target === backdropCr6wns) closeModalCr6wns();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdropCr6wns.classList.contains('open')) {
+        closeModalCr6wns();
+      }
+    });
+
+    const card = document.getElementById('playlistCard');
+    const backdrop = document.getElementById('modalBackdrop');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function openModal() {
+      card.classList.add('active');              // makes it brighter
+      backdrop.classList.add('open');            // shows modal
+      backdrop.setAttribute('aria-hidden', 'false');
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      card.classList.remove('active');
+      backdrop.classList.remove('open');
+      backdrop.setAttribute('aria-hidden', 'true');
+      card.focus();
+    }
+
+    card.addEventListener('click', openModal);
+
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal();
+      }
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdrop.classList.contains('open')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

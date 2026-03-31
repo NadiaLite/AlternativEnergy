@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alternativenergy.coM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Text&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #D1CFC9; /* Buttercream */
+      color: #1a1d2b;
+      font-family: 'Crimson Text', serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    a {
+      color: #0a0c18;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      background-color: #0a0c18; /* Deep navy */
+      padding: 2.5rem 1rem 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid #b6b3ad;
+      transition: padding 0.3s ease-in-out;
+    }
+
+    /* Condensed header state - made more compact */
+    header.condensed {
+      padding: 0.4rem 1rem 0.3rem;
+    }
+
+    /* Logo styling with smooth transitions */
+    .header-logo {
+      max-height: 130px;
+      margin-bottom: 0.8rem;
+      transition: all 0.3s ease-in-out;
+      opacity: 1;
+    }
+
+    /* Condensed logo state - made smaller */
+    header.condensed .header-logo {
+      max-height: 110px;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Hide/show logo images with smooth fade */
+    .logo-large {
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .logo-slim {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      max-height: 110px;
+    }
+
+    header.condensed .logo-large {
+      opacity: 0;
+    }
+
+    header.condensed .logo-slim {
+      opacity: 1;
+    }
+
+    /* Logo container for positioning */
+    .logo-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 0.8rem;
+      transition: margin-bottom 0.3s ease-in-out;
+    }
+
+    header.condensed .logo-container {
+      margin-bottom: 0.2rem;
+    }
+
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3rem;
+      color: #D1CFC9; /* Buttercream title text */
+      letter-spacing: 2px;
+      text-transform: lowercase;
+    }
+
+    nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem; /* reduced gap */
+  margin-top: 1rem;
+  transition: margin-top 0.3s ease-in-out;
+}
+
+    header.condensed nav ul {
+      margin-top: 0.3rem;
+    }
+
+    nav ul li a {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: #f6f3ea; /* Cream color */
+  position: relative;
+  padding: 0.2rem 0;
+  text-decoration: none;
+  background: none;
+  border: none;
+  box-shadow: none;
+  transition: color 0.3s ease;
+}
+
+nav ul li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 130%; /* extend beyond word */
+  height: 2px;
+  background-color: #f6f3ea;
+  transform: translateX(-15%);
+  transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #fff;
+}
+
+nav ul li a:hover::after {
+  background-color: #ffffff;
+}
+
+    .banner-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+    main {
+      padding: 4rem 2rem;
+    }
+
+    section {
+      margin-bottom: 6rem;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.3rem;
+      color: #0a0c18; /* Deep navy */
+      border-bottom: 2px solid #6d7a94;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .music-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem; /* Increased gap between tracks */
+      max-width: 500px;
+      margin: 0 auto;
+      margin-top: 2rem; /* Added space between banner and tracks */
+    }
+
+    .track {
+      background: #f0eeea;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      border: 1px solid #bbb;
+    }
+
+    .track h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #0a0c18;
+    }
+
+    .track audio {
+      width: 100%;
+    }
+
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .photo-gallery img {
+      width: 100%;
+      height: auto;
+      border: 3px solid #aaa;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .photo-gallery img:hover {
+      transform: scale(1.04);
+      filter: contrast(110%);
+    }
+
+    .more-button {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: 'Cinzel', serif;
+      background-color: #0a0c18;
+      color: #D1CFC9;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .more-button:hover {
+      background-color: #222;
+    }
+
+    .footer {
+      background: #0a0c18;
+      color: #D1CFC9;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.85rem;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      border-top: 1px solid #b6b3ad;
+    }
+
+    .about-section {
+      font-family: 'Crimson Text', serif;
+      font-size: 1.2rem;
+      text-align: center;
+      color: #0a0c18;
+      padding-top: 2rem;
+    }
+
+.nav-strike {
+  text-decoration: line-through;
+}
+.link-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  padding: 0 1rem;
+}
+
+.link-tile {
+  display: flex;
+  align-items: flex-end;
+  justify-content: left;
+  background-size: cover;
+  background-position: center;
+  height: 130px;
+  color: white;
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  border-radius: 4px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.link-tile:hover {
+  transform: scale(1.02);
+  filter: brightness(110%);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent underline animation for the blog image button */
+.no-underline a::after {
+  content: none !important;
+}
+
+/* Featured items styling */
+.featured-items {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.featured-item {
+  text-align: center;
+  max-width: 400px;
+}
+
+.featured-item img {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.featured-item h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  color: #0a0c18;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ticker {
+  width: 100%;
+  overflow: hidden;
+  background-color: #D1CFC9; /* Buttercream background */
+  color: #0a0c18; /* Dark text */
+  font-size: 0.8rem;
+  font-family: 'Crimson Text', serif;
+  white-space: nowrap;
+  height: 25px;
+  line-height: 25px;
+  position: relative;
+  z-index: 200;
+}
+
+.ticker__wrap {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker__move {
+  display: inline-block;
+  padding-left: 100%;
+  animation: tickerMove 15s linear infinite;
+}
+
+@keyframes tickerMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+/* === Latest from the Blog === */
+.latest-blog {
+  max-width: 900px;
+  margin: 3rem auto 2rem;
+  background: #f0eeea;
+  border: 1px solid #bbb;
+  border-radius: 12px;
+  padding: 1.75rem;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+.latest-blog .section-title {
+  border-bottom: none;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.latest-blog .blog-subhead {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+.blog-graf {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: #1a1d2b;
+  margin: 1rem 0;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 500ms ease, transform 500ms ease;
+  min-height: 1.2em; /* prevents jump before text appears */
+}
+.blog-graf.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.blog-graf .cursor {
+  display: inline-block;
+  width: 0.6ch;
+  border-right: 2px solid #1a1d2b;
+  animation: blink 1s steps(1) infinite;
+  margin-left: 2px;
+}
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* Accessibility: if user prefers reduced motion, skip typing */
+@media (prefers-reduced-motion: reduce) {
+  .blog-graf { transition: none; }
+  .blog-graf .cursor { display: none; animation: none; }
+}
+
+/* ===== HOMEPAGE PLAYLIST (LiveWireVirgoes) ===== */
+.home-playlist-wrap{
+  max-width: 900px;
+  margin: 2rem auto 2.2rem;
+  padding: 0 1rem;
+}
+
+.home-playlist-card{
+  max-width: 720px;
+  margin: 0 auto;
+  background: rgba(10, 12, 24, 0.06);
+  border: 1px solid rgba(10, 12, 24, 0.18);
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+  outline: none;
+}
+
+.home-playlist-card:hover{
+  transform: translateY(-2px);
+}
+
+.home-playlist-card.active{
+  filter: brightness(1.12) saturate(1.05);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.18);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.home-playlist-art{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+}
+
+.home-playlist-label{
+  margin-top: 10px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-playlist-name{
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: #0a0c18;
+}
+
+.home-playlist-hint{
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(10, 12, 24, 0.7);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px){
+  .home-playlist-hint{ display: none; }
+  .home-playlist-wrap{ margin: 1.4rem auto 1.6rem; }
+}
+
+/* Modal */
+.home-modal-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 9999;
+}
+
+.home-modal-backdrop.open{ display: flex; }
+
+.home-modal{
+  width: min(560px, 96vw);
+  border-radius: 16px;
+  background: rgba(245, 243, 234, 0.98);
+  border: 1px solid rgba(10, 12, 24, 0.18);
+  box-shadow: 0 22px 70px rgba(0,0,0,0.30);
+  padding: 16px;
+}
+
+.home-modal-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.home-modal-title{
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  color: #0a0c18;
+}
+
+.home-close-btn{
+  border: 1px solid rgba(10, 12, 24, 0.25);
+  background: transparent;
+  color: #0a0c18;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.home-choices{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.home-choice{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(10, 12, 24, 0.06);
+  border: 1px solid rgba(10, 12, 24, 0.14);
+  text-decoration: none;
+  color: #0a0c18;
+  font-weight: 700;
+}
+
+.home-choice:hover{
+  filter: brightness(1.04);
+}
+
+.home-choice small{
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+  </style>
+</head>
+<body>
+<div class="ticker">
+  <div class="ticker__wrap">
+    <div class="ticker__move">
+      New Blog Post: STERLING RUBY'S SKULLS DEPICT A PLAYFUL YET CHILLING TAKE ON INCARCERATION, MERGING HIDING FROM FEAR WITH THE BARREN REALITIES OF AMERICA'S PRISON‑INDUSTRIAL COMPLEX. Read on Blog Page NOW. GO! GO! GO!
+    </div>
+  </div>
+</div>
+  <header id="main-header">
+    <div class="logo-container">
+      <img src="images/ChomskeyAE2.png" alt="Alternativenergy.coM Logo" class="header-logo logo-large">
+      <img src="images/SlimHead.png" alt="Alternativenergy.coM Logo Slim" class="header-logo logo-slim">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#explore-section">Explore</a></li>
+        <li class="no-underline">
+          <a href="blog.html" target="_blank">
+            <img src="images/BBlog.png" alt="Blog" style="height: 82px; vertical-align: middle; margin-top: -25px;">
+          </a>
+        </li>
+<li>
+  <a href="listen.html">
+    Music
+  </a>
+</li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Banner image below header -->
+  <img class="banner-image" src="images/tiger.JPG" alt="tiger image banner">
+
+<!-- Homepage playlist (same as Music page) -->
+<section class="home-playlist-wrap">
+  <div
+    class="home-playlist-card"
+    id="homePlaylistCard"
+    role="button"
+    tabindex="0"
+    aria-haspopup="dialog"
+    aria-controls="homePlaylistModal"
+    aria-label="Open LiveWireVirgoes links"
+  >
+    <img class="home-playlist-art" src="images/LiveWireVirgoes.png" alt="LiveWireVirgoes playlist cover">
+
+    <div class="home-playlist-label">
+      <p class="home-playlist-name">LiveWireVirgoes</p>
+      <p class="home-playlist-hint">Click to open links</p>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="home-modal-backdrop" id="homeModalBackdrop" aria-hidden="true">
+  <div class="home-modal" role="dialog" aria-modal="true" aria-labelledby="homeModalTitle" id="homePlaylistModal">
+    <div class="home-modal-top">
+      <h2 class="home-modal-title" id="homeModalTitle">LiveWireVirgoes</h2>
+      <button class="home-close-btn" id="homeCloseBtn" type="button" aria-label="Close">Close</button>
+    </div>
+
+    <div class="home-choices">
+      <a class="home-choice" href="https://open.spotify.com/playlist/0veBYnByns4erprRzTI82U?si=17-1_vYgS9G8CFJC87N-3w" target="_blank" rel="noopener">
+        Spotify <small>opens in a new tab</small>
+      </a>
+      <a class="home-choice" href="https://music.apple.com/us/playlist/virgoes-livewire/pl.u-WabZ6RaHe3eAZ7y" target="_blank" rel="noopener">
+        Apple Music <small>opens in a new tab</small>
+      </a>
+      <a class="home-choice" href="https://soundcloud.com/anthzumi/sets/virgoes-livewire?si=554c939d72f94affb6a886cf09b68c9e&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener">
+        SoundCloud <small>opens in a new tab</small>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="link-grid" id="explore-section">
+  <a href="listen.html" class="link-tile" style="background-image: url('images/music1.jpg');">Music</a>
+  <a href="blog.html" class="link-tile" style="background-image: url('images/Up.JPG');color: ##FFFFFF; text-shadow:   0 0 20px #000,
+     0 0 40px #111,
+     0 0 70px #222,
+     0 0 110px #333;"
+   onmouseover="this.style.textShadow='0 0 30px #000, 0 0 70px #111, 0 0 110px #222, 0 0 160px #333';"
+   onmouseout="this.style.textShadow='0 0 20px #000, 0 0 40px #111, 0 0 70px #222, 0 0 110px #333';">Blog</a>
+  <a href="https://gofund.me/f986d1792" class="link-tile" style="background-image: url('images/tales1.jpg');">Contribute</a>
+</div>
+
+<!-- Button Image Grid Section -->
+<!-- Latest from the Blog (auto-displays newest story intro) -->
+<section class="latest-blog" id="latest-blog">
+  <h2 class="section-title">10nik is Leading the Way</h2>
+  <div class="blog-subhead" id="latest-blog-title"></div>
+  <div id="latest-blog-grafs">
+    <!-- Paragraphs are injected and revealed on scroll -->
+  </div>
+  <div style="margin-top:1rem">
+    <a class="more-button" href="blog.html" target="_blank" aria-label="Read the full blog post">
+      Read the full post
+    </a>
+  </div>
+</section>
+<div class="link-grid" id="explore-section">
+  <a href="listen.html" class="link-tile" style="background-image: url('images/music1.jpg');">Music</a>
+  <a href="blog.html" class="link-tile" style="background-image: url('images/up.jpg');color: ##FFFFFF; text-shadow:   0 0 20px #000,
+     0 0 40px #111,
+     0 0 70px #222,
+     0 0 110px #333;"
+   onmouseover="this.style.textShadow='0 0 30px #000, 0 0 70px #111, 0 0 110px #222, 0 0 160px #333';"
+   onmouseout="this.style.textShadow='0 0 20px #000, 0 0 40px #111, 0 0 70px #222, 0 0 110px #333';">Blog</a>
+  <a href="https://gofund.me/f986d1792" class="link-tile" style="background-image: url('images/tales1.jpg');">Contribute</a>
+</div>
+
+  <footer class="footer">
+    &copy; 2025 Alternativenergy.coM. All rights reserved.
+  </footer>
+
+<script>
+  // Header condensing functionality
+  let lastScrollTop = 0;
+  const header = document.getElementById('main-header');
+  
+  // Throttle scroll events to prevent glitching
+  let scrollTimeout;
+  
+  window.addEventListener('scroll', function() {
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+    
+    scrollTimeout = setTimeout(function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Add condensed class when scrolled down more than 100px
+      if (scrollTop > 100) {
+        header.classList.add('condensed');
+      } else {
+        header.classList.remove('condensed');
+      }
+      
+      lastScrollTop = scrollTop;
+    }, 10);
+  });
+
+  // Audio control functions
+  function toggleEastCoast() {
+    const audio = document.getElementById('eastcoast-audio');
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+
+  function toggleHysteria() {
+    const audio = document.getElementById('hysteria-audio');
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+
+  function togglePlayPause() {
+    const audio = document.getElementById('maudlin-audio');
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+
+  function toggleValance() {
+    const audio = document.getElementById('valance-audio');
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+
+// === LATEST FROM THE BLOG — CONFIG ===
+// Speed knobs (tweak these)
+const TYPE_MODE = 'word'; // 'word' | 'letter'
+const WORD_DELAY = 220;   // ms per word (raise to slow down)
+const LETTER_DELAY = 55;  // ms per letter (raise to slow down)
+const PAUSE_BETWEEN_GRAFS = 800; // ms pause after each graf completes
+
+// === LATEST FROM THE BLOG — DATA ===
+// Title + first grafs + first two Q&As
+const LATEST_BLOG = {
+  title: "AlternativEnergy's Interview with 10nik",
+  paragraphs: [
+    // Intro grafs
+    "Raised in New Jersey and later moving to Miami, 10nik, or Tenik, picked up music through his dad and has turned that influence into a catalog of tracks on SoundCloud, growing a community across Instagram and YouTube.",
+    "Over the past decade, he has shaped a sound that blends lyrical rap with modern, energetic production, tapping into a new style of rap music.",
+    "With new projects on the way, Alternativenergy sat down with 10nik to talk about his beginnings, his creative process, and the direction he hopes to take his music next.",
+
+    // Q1 (question + answer paragraphs)
+    "Q: Who are you, what do you do, and where are you from?",
+    "My name is Tenik. I’m from New Jersey, small-town New Jersey type shit. I’m now living in Miami right now.",
+    "I’ve been making music, I think, like 10 years now. Shit’s kinda crazy. My dad made music and shit, so music’s always been in there. Music’s always been the number one.",
+
+    // Q2 (question + answer)
+    "Q: How did you get started making music?",
+    "I started out DJing first. I was DJing at like parties, like little-ass kids’ parties when I was like 11. My dad wanted to rap, and he made music and shit. He was trying to give me a whole plan, bro, like this. He was trying to make me do like Silentó shit, like the Whip and Nae Nae. I was like, fuck that. I got my own equipment, bro. Since then, I’ve been making music."
+  ]
+};
+
+// === RENDER BLOCK ===
+function renderLatestBlog() {
+  const titleEl = document.getElementById('latest-blog-title');
+  const grafsWrap = document.getElementById('latest-blog-grafs');
+  if (!titleEl || !grafsWrap) return;
+
+  titleEl.textContent = LATEST_BLOG.title;
+
+  // Build empty paragraph containers (we'll fill them sequentially)
+  grafsWrap.innerHTML = '';
+  LATEST_BLOG.paragraphs.forEach((_, i) => {
+    const p = document.createElement('p');
+    p.className = 'blog-graf';
+    p.id = `blog-graf-${i}`;
+    grafsWrap.appendChild(p);
+  });
+
+  // When the section comes into view, start the sequential typing
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let started = false;
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!started && entry.isIntersecting) {
+        started = true;
+        typeSequence(prefersReduced);
+        sectionObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const sectionEl = document.getElementById('latest-blog');
+  if (sectionEl) sectionObserver.observe(sectionEl);
+}
+
+// === Sequential typing for all grafs (waits for each to finish) ===
+async function typeSequence(prefersReduced) {
+  for (let i = 0; i < LATEST_BLOG.paragraphs.length; i++) {
+    const el = document.getElementById(`blog-graf-${i}`);
+    if (!el) continue;
+
+    // reveal animation
+    el.classList.add('revealed');
+
+    if (prefersReduced) {
+      // No typing — instant text
+      el.textContent = LATEST_BLOG.paragraphs[i];
+    } else {
+      // Choose mode
+      if (TYPE_MODE === 'letter') {
+        await typeLetters(el, LATEST_BLOG.paragraphs[i], LETTER_DELAY);
+      } else {
+        await typeWords(el, LATEST_BLOG.paragraphs[i], WORD_DELAY);
+      }
+      // optional pause after each graf
+      await sleep(PAUSE_BETWEEN_GRAFS);
+    }
+  }
+}
+
+// === Typing helpers ===
+function sleep(ms){ return new Promise(res => setTimeout(res, ms)); }
+
+function typeWords(container, fullText, delayPerWord = 220) {
+  return new Promise(resolve => {
+    const words = fullText.split(' ');
+    container.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    container.appendChild(cursor);
+    let i = 0;
+
+    function step() {
+      if (i < words.length) {
+        // keep cursor at end
+        cursor.remove();
+        container.textContent += (i === 0 ? '' : ' ') + words[i];
+        container.appendChild(cursor);
+        i++;
+        setTimeout(step, delayPerWord);
+      } else {
+        cursor.remove();
+        resolve();
+      }
+    }
+    step();
+  });
+}
+
+function typeLetters(container, fullText, delayPerLetter = 55) {
+  return new Promise(resolve => {
+    container.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    container.appendChild(cursor);
+    let i = 0;
+
+    function step() {
+      if (i < fullText.length) {
+        // keep cursor at end
+        cursor.remove();
+        container.textContent += fullText[i];
+        container.appendChild(cursor);
+        i++;
+        setTimeout(step, delayPerLetter);
+      } else {
+        cursor.remove();
+        resolve();
+      }
+    }
+    step();
+  });
+}
+
+// Kick it off after DOM is ready
+document.addEventListener('DOMContentLoaded', renderLatestBlog);
+</script>
+
+<script>
+  const homeCard = document.getElementById('homePlaylistCard');
+  const homeBackdrop = document.getElementById('homeModalBackdrop');
+  const homeCloseBtn = document.getElementById('homeCloseBtn');
+
+  function openHomeModal() {
+    if (!homeCard || !homeBackdrop || !homeCloseBtn) return;
+    homeCard.classList.add('active');
+    homeBackdrop.classList.add('open');
+    homeBackdrop.setAttribute('aria-hidden', 'false');
+    homeCloseBtn.focus();
+  }
+
+  function closeHomeModal() {
+    if (!homeCard || !homeBackdrop) return;
+    homeCard.classList.remove('active');
+    homeBackdrop.classList.remove('open');
+    homeBackdrop.setAttribute('aria-hidden', 'true');
+    homeCard.focus();
+  }
+
+  if (homeCard) {
+    homeCard.addEventListener('click', openHomeModal);
+    homeCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openHomeModal();
+      }
+    });
+  }
+
+  if (homeCloseBtn) homeCloseBtn.addEventListener('click', closeHomeModal);
+
+  if (homeBackdrop) {
+    homeBackdrop.addEventListener('click', (e) => {
+      if (e.target === homeBackdrop) closeHomeModal();
+    });
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && homeBackdrop && homeBackdrop.classList.contains('open')) {
+      closeHomeModal();
+    }
+  });
+</script>
+
+</body>
+</html>

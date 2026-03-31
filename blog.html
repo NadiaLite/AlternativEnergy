@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AE Blog | Alternativenergy</title>
+
+  <style>
+    /* =========================
+       FONTS
+       - Body/titles: Helvetica
+       - Header: Chomsky (self-host)
+       Put your Chomsky files here:
+       /fonts/chomsky.woff2
+       /fonts/chomsky.woff
+       ========================= */
+    @font-face {
+      font-family: "Chomsky";
+      src:
+        url("fonts/chomsky.woff2") format("woff2"),
+        url("fonts/chomsky.woff") format("woff");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      color: #0a0c18;
+      /* early-internet-ish blue pattern */
+      background:
+        linear-gradient(0deg, rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
+        repeating-linear-gradient(90deg, #b9d7ff 0 6px, #d9ecff 6px 12px);
+      padding: 0;
+    }
+
+    a { color: #0033cc; }
+    a:visited { color: #551A8B; }
+
+    /* =========================
+       TOP HEADER
+       ========================= */
+    .topbar {
+      background: #c40000;
+      border-bottom: 3px solid #7a0000;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .ae-title {
+      font-family: "Chomsky", Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      font-size: 44px;
+      line-height: 1;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    /* Title image in the red header */
+    .ae-logo {
+      height: 130px;
+      width: auto;
+      display: block;
+      user-select: none;
+      margin-left: 14px;   /* move it right */
+    }
+
+    .ae-sub {
+      color: #fff;
+      font-size: 13px;
+      opacity: 0.95;
+      user-select: none;
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+      color: #fff;
+    }
+
+    .topbar-right .pill {
+      border: 1px solid #ffffff;
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* =========================
+       PAGE WRAP
+       ========================= */
+    .wrap {
+      max-width: 1100px;
+      margin: 14px auto;
+      padding: 0 10px 30px;
+    }
+
+    /* =========================
+   TABS (NO OVERLAP)
+   ========================= */
+.tabs {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+  margin: 10px 0 10px; /* space under tabs so nothing covers the panel */
+}
+
+.tab {
+  border: 2px solid #0033cc;
+  background: #ffffff;   /* inactive = white */
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 13px;
+}
+
+.tab.active {
+  background: #cfe4ff;   /* active = blue */
+}
+
+    .panel {
+      border: 2px solid #0033cc;
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 0;
+      box-shadow: none; /* keep it raw/clean */
+    }
+
+    .panel.hidden { display: none !important; }
+
+    /* =========================
+       STORIES: FULL-WIDTH THIN STRIPS
+       ========================= */
+    .stories-note {
+      font-size: 12px;
+      color: #111;
+      margin-bottom: 10px;
+      border: 1px dashed #0033cc;
+      background: #f2f8ff;
+      padding: 8px 10px;
+    }
+
+    .story {
+      border: 2px solid #0a0c18;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+
+    .story-strip {
+      width: 100%;
+      height: 120px; /* thin strip (default) */
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      border-bottom: 2px solid #0a0c18;
+      image-rendering: auto;
+    }
+
+    /* WIDE STRIP (matches 1206 x 345 aspect ratio) */
+    .story-strip.wide {
+      height: auto;
+      aspect-ratio: 1206 / 345;   /* keeps the exact shape */
+      object-fit: cover;          /* no weird stretching */
+    }
+
+    .story-strip:hover {
+      filter: contrast(1.05);
+    }
+
+    .story-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      background: #eaf3ff;
+      border-bottom: 2px solid #0a0c18;
+      font-size: 13px;
+    }
+
+    .story-title {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .story-byline {
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    .story-body {
+      display: none;
+      padding: 14px 14px 8px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .story-body.open { display: block; }
+
+    .story-body p { margin-bottom: 14px; }
+
+    .story-body h3 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 800;
+    }
+
+    .story-close-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      font-family: Helvetica, Arial, sans-serif;
+      border: 2px solid #0a0c18;
+      background: #ffffff;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-weight: 700;
+      border-radius: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 12px;
+    }
+
+    .btn:hover { background: #f2f2f2; }
+
+/* =========================
+   IG-STYLE SWIPE CAROUSEL
+   ========================= */
+.ig-carousel {
+  border: 2px solid #0a0c18;
+  background: #fff;
+  margin: 10px 0 14px;
+}
+
+.ig-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox hide */
+}
+
+.ig-track::-webkit-scrollbar { display: none; } /* Chrome/Safari hide */
+
+.ig-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.ig-slide img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+    /* =========================
+       EXTRA TAB CONTENT
+       ========================= */
+    .extra-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 14px;
+    }
+
+    .extra-menu {
+      border: 2px solid #0a0c18;
+      background: #eaf3ff;
+      padding: 10px;
+    }
+
+    .extra-menu h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 2px solid #0a0c18;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    .extra-menu button {
+      width: 100%;
+      text-align: left;
+      border: 2px solid #0a0c18;
+      background: #ffffff;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-family: Helvetica, Arial, sans-serif;
+      border-radius: 0;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .extra-menu button:hover { background: #f2f2f2; }
+
+    .extra-content {
+      border: 2px solid #0a0c18;
+      background: #ffffff;
+      padding: 12px;
+      min-height: 220px;
+    }
+
+    .extra-content h2 {
+      border-bottom: 2px solid #0a0c18;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .extra-content img {
+      max-width: 100%;
+      border: 2px solid #0a0c18;
+      margin: 10px 0;
+      border-radius: 0;
+      display: block;
+    }
+
+    /* =========================
+       SYSTEMS BOX (kept, restyled)
+       ========================= */
+    .systems-box {
+      margin-top: 18px;
+      border: 2px solid #0033cc;
+      background: #ffffff;
+      padding: 12px;
+    }
+
+    .systems-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 2px solid #0033cc;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    .systems-title {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing:  see the code, it is fine
+      font-size: 13px;
+    }
+
+    .systems-users { font-size: 13px; }
+
+/* =========================
+   VIDEO BLOCK
+   ========================= */
+.video-block {
+  border: 2px solid #0a0c18;
+  background: #ffffff;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.video-block iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  display: block;
+  border: 2px solid #0a0c18;
+  background: #000;
+}
+
+.video-block h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.video-embed {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 2px solid #0a0c18;
+  background: #000;
+  overflow: hidden;
+}
+
+.video-embed iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
+    #draw-canvas {
+      width: 100%;
+      height: 240px;
+      background: #f7fbff;
+      border: 2px solid #0a0c18;
+      border-radius: 0;
+      cursor: crosshair;
+      touch-action: none;
+      display: block;
+      margin-top: 10px;
+    }
+
+/* =========================
+   DESKTOP ONLY: tighter story layout
+   (keeps mobile unchanged)
+   ========================= */
+@media (min-width: 861px) {
+  /* Make Stories list use 2 columns on desktop */
+  #panel-stories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+
+  /* Keep the note full-width across both columns */
+  #panel-stories .stories-note {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  /* Slightly tighten each story block on desktop */
+  #panel-stories .story-meta {
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
+  #panel-stories .story-body {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  #panel-stories .story-body h3 {
+    font-size: 20px;
+  }
+}
+
+    /* =========================
+       RESPONSIVE
+       ========================= */
+    @media (max-width: 860px) {
+      .ae-title { font-size: 36px; }
+      .extra-grid { grid-template-columns: 1fr; }
+      .story-strip { height: 105px; }
+      .ae-logo { height: 80px; }
+      .ae-logo { margin-left: 12px; }
+    }
+
+    @media (max-width: 520px) {
+      .ae-title { font-size: 32px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .topbar-right { width: 100%; justify-content: space-between; }
+      .story-meta { flex-direction: column; align-items: flex-start; }
+      .ae-logo { height: 96px; }
+      .ae-logo { margin-left: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- TOP HEADER -->
+  <div class="topbar">
+    <div class="topbar-left" onclick="window.location.href='index.html'">
+      <img
+        class="ae-logo"
+        src="images/ChomBlog.png"
+        alt="ChomBlog"
+        onerror="this.style.display='none'; document.getElementById('ae-fallback-title').style.display='block';"
+      >
+      <div class="ae-title" id="ae-fallback-title" style="display:none;">AE Blog</div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="pill">Users online: <strong id="users-online-count">--</strong></div>
+      <div class="pill"><a href="index.html" style="color:#fff; text-decoration:none;">Home</a></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- TABS -->
+    <div class="tabs">
+  <div class="tab" id="tab-stories" onclick="switchTab('stories')">Stories</div>
+  <div class="tab" id="tab-extra" onclick="switchTab('extra')">Extra</div>
+</div>
+
+    <!-- PANELS -->
+    <div class="panel" id="panel-stories">
+      <div class="stories-note">
+        Click a strip to open the story under it. Click again (or “Close”) to collapse.
+      </div>
+
+<!-- =========================
+     NEW STORIES (Coming soon)
+     Images: 1206 x 345 PNGs
+     ========================= -->
+
+<!-- STORY: Experience Nebula Playlist (ENPE) -->
+<div class="story">
+  <img class="story-strip wide" src="images/ENPE.png" alt="Experience Nebula Playlist"
+       onclick="toggleStory('story-enpe')">
+
+  <div class="story-meta">
+    <div class="story-title">Experience Nebula Playlist</div>
+    <div class="story-byline">By Aidan Anthaume</div>
+  </div>
+
+  <div class="story-body" id="story-enpe">
+    <div class="story-close-row">
+      <button class="btn" onclick="closeStory('story-enpe')">Close</button>
+    </div>
+
+    <h3>Experience Nebula Playlist</h3>
+
+    <p><strong>What do you want people to feel when they listen to this playlist?</strong></p>
+
+    <p>I want people to feel inspired by this playlist. The first half features ‘smaller’ artists who are pushing boundaries in the music industry, proving that numbers don’t define talent. The other half is more chill. 10 songs to sit back to. It feels nostalgic, but also makes you excited for the future, and to remind yourself of how far you’ve already come.</p>
+
+    <p><strong>Nd The II, Yukan, LEANZZ, PureSnow, Grav3, BOiKEY4000, Lucan</strong></p>
+
+    <p>These 7 artists are talented individuals you need to keep an eye on. I genuinely believe all of these guys will be successful in the following years, and one of them, PureSnow, is already blowing up. Each one of these artists is pursuing their own sounds and definitely deserves the spotlight. Mark my words, these guys will take over the scene, sooner or later.</p>
+
+    <p><em>nothing like uuu</em> - Nettspend</p>
+
+    <p>This song is included because without it, Experience Nebula wouldn’t exist. This was the song that first introduced to me to the new Underground scene, and inspired me to start posting music related contentated content on TikTok, all the way back in July 2024. A year and half later here we are, all because of one song.</p>
+
+    <p><em>Somber Home</em> - Perry Maysun</p>
+
+    <p>When Nebula first started I would reach out to artists asking if they’d be interested in talking about their newest album. I got a few responses but the one that stood out the most was Perry Maysun. At the time he was the biggest artist I’ve worked with so this definitely motivated me to keep working knowing Nebula was already being recognised by bigger names in the scene. Shout out to Perry super nice guy.</p>
+
+<p><em>onone1</em> - Seyiorset</p>
+
+<p>Similarly to Nettspend’s nothing like uuu this is the song that introduced me to the UK Underground, which is what I focus on today. 2 years later I still think this is one the best UK UG songs out there. Seyiorset is a very nice person and I got the chance to work with him on our first show, The Nebula Experience Vol.1</p>
+
+<p><strong>The Second Half</strong></p>
+
+<p>The last 10 songs of this playlist are personal picks, not influenced by Nebula at all. It was extremely difficult choosing 10 songs but the tracks I picked are in my opinion timeless. Not every song in this half will be your cup of tea but you’ll definitely find something in there that resonates with you.</p>
+
+    <p>
+      <a href="listen.html">Listen to the Experience Nebula LiveWire Playlist HERE</a>
+    </p>
+  </div>
+</div>
+
+<!-- STORY: Mandeaux Interview -->
+<div class="story">
+  <img class="story-strip wide" src="images/BMand.png" alt="Mandeaux Interview"
+       onclick="toggleStory('story-mand')">
+
+  <div class="story-meta">
+    <div class="story-title">Mandeaux Interview</div>
+    <div class="story-byline">By Aidan Anthaume</div>
+  </div>
+
+  <div class="story-body" id="story-mand">
+  <div class="story-close-row">
+    <button class="btn" onclick="closeStory('story-mand')">Close</button>
+  </div>
+
+  <h3>Mandeaux Interview</h3>
+
+  <!-- Swipe carousel (Instagram-style) -->
+  <div class="ig-carousel">
+    <div class="ig-track">
+      <div class="ig-slide"><img src="images/mtwo.png" alt="Mandeaux slide 2"></div>
+      <div class="ig-slide"><img src="images/mthree.png" alt="Mandeaux slide 3"></div>
+      <div class="ig-slide"><img src="images/mfour.png" alt="Mandeaux slide 4"></div>
+      <div class="ig-slide"><img src="images/mfive.png" alt="Mandeaux slide 5"></div>
+      <div class="ig-slide"><img src="images/msix.png" alt="Mandeaux slide 6"></div>
+      <div class="ig-slide"><img src="images/mseven.png" alt="Mandeaux slide 7"></div>
+      <div class="ig-slide"><img src="images/m8.png" alt="Mandeaux slide 8"></div>
+    </div>
+  </div>
+
+  <p style="font-size:12px; margin-top:-6px; opacity:0.85;">
+    Swipe left/right to view.
+  </p>
+</div>
+</div>
+
+<!-- STORY: Virgoes (Coming soon) -->
+<div class="story">
+  <img class="story-strip wide" src="images/BVirgoes.png" alt="Virgoes (Coming soon)"
+       onclick="toggleStory('story-virgoes')">
+
+  <div class="story-meta">
+    <div class="story-title">Virgoes Interview</div>
+    <div class="story-byline">By Aidan Anthaume</div>
+  </div>
+
+  <div class="story-body" id="story-virgoes">
+    <div class="story-close-row">
+      <button class="btn" onclick="closeStory('story-virgoes')">Close</button>
+    </div>
+
+    <h3>Virgoes Interview</h3>
+    <p>Coming soon.</p>
+  </div>
+</div>
+
+<!-- STORY: Hugo (Coming soon) -->
+<div class="story">
+  <img class="story-strip wide" src="images/BHugo.png" alt="Hugo (Coming soon)"
+       onclick="toggleStory('story-hugo')">
+
+  <div class="story-meta">
+    <div class="story-title">Hugo Zbor Interview</div>
+    <div class="story-byline">By Aidan Anthaume</div>
+  </div>
+
+  <div class="story-body" id="story-hugo">
+    <div class="story-close-row">
+      <button class="btn" onclick="closeStory('story-hugo')">Close</button>
+    </div>
+
+    <h3>Hugo Zbor Interview</h3>
+    <p>Coming soon.</p>
+  </div>
+</div>
+
+<!-- STORY: Khrome (Coming soon) -->
+<div class="story">
+  <img class="story-strip wide" src="images/BKhrome.png" alt="Khrome (Coming soon)"
+       onclick="toggleStory('story-khrome')">
+
+  <div class="story-meta">
+    <div class="story-title">KhromeYumi Interview</div>
+    <div class="story-byline">By Aidan Anthaume</div>
+  </div>
+
+  <div class="story-body" id="story-khrome">
+    <div class="story-close-row">
+      <button class="btn" onclick="closeStory('story-khrome')">Close</button>
+    </div>
+
+    <h3>KhromeYumi Interview</h3>
+    <p>Coming soon.</p>
+  </div>
+</div>
+
+<!-- STORY: Brax (Coming soon) -->
+<div class="story">
+  <img class="story-strip wide" src="images/BBrax.png" alt="Brax (Coming soon)"
+       onclick="toggleStory('story-brax')">
+
+  <div class="story-meta">
+    <div class="story-title">Brax Interview</div>
+    <div class="story-byline">By Aidan Anthaume</div>
+  </div>
+
+  <div class="story-body" id="story-brax">
+    <div class="story-close-row">
+      <button class="btn" onclick="closeStory('story-brax')">Close</button>
+    </div>
+
+    <h3>Brax Interview</h3>
+    <p>Coming soon.</p>
+  </div>
+</div>
+
+<!-- STORY: 10nik -->
+<div class="story">
+  <img class="story-strip wide" src="images/BTenik.png" alt="Tenik Interview (Coming soon)"
+       onclick="toggleStory('story-Tenik')">
+
+<div class="story-meta">
+    <div class="story-title">Tenik Interview</div>
+    <div class="story-byline">By Aidan Anthaume</div>
+  </div>
+
+  <div class="story-body" id="story-Tenik">
+    <div class="story-close-row">
+      <button class="btn" onclick="closeStory('story-Tenik')">Close</button>
+    </div>
+
+          <h3>10nik is Leading the Way</h3>
+
+          <p>Raised in New Jersey and later moving to Miami, 10nik, or Tenik, picked up music through his dad and has turned that influence into a catalog of tracks on SoundCloud, growing a community across Instagram and YouTube.</p>
+          <p>Over the past decade, he has shaped a sound that blends lyrical rap with modern, energetic production, tapping into a new style of rap music.</p>
+          <p>With new projects on the way, Alternativenergy sat down with 10nik to talk about his beginnings, his creative process, and the direction he hopes to take his music next.</p>
+
+          <p><strong>Q: Who are you, what do you do, and where are you from?</strong></p>
+          <p>My name is Tenik. I’m from New Jersey, small-town New Jersey type shit. I’m now living in Miami right now.</p>
+          <p>I’ve been making music, I think, like 10 years now. Shit’s kinda crazy. My dad made music and shit, so music’s always been in there. Music’s always been the number one.</p>
+
+          <p><strong>Q: How did you get started making music?</strong></p>
+          <p>I started out DJing first. I was DJing at like parties, like little-ass kids’ parties when I was like 11. My dad wanted to rap, and he made music and shit. He was trying to give me a whole plan, bro, like this. He was trying to make me do like Silentó shit, like the Whip and Nae Nae. I was like, fuck that. I got my own equipment, bro. Since then, I’ve been making music.</p>
+
+          <p><strong>Q: What kind of music inspired your sound?</strong></p>
+          <p>My sound is a little bit different than what I was listening to growing up.</p>
+          <p>I was listening to a lot of lyrical stuff, but I always liked techno shit. I was listening to hella Skrillex, Safari.</p>
+          <p>I think in my music, though, I try to keep the lyrical aspect of it. I still try to say something. I know a lot of music now is just feel-good music and shit, but I still want to get some sort of a message across. But I’m also having fun, like I’m just trying to feel good too.</p>
+
+          <p><strong>Q: Can you explain “U Lead the Way”?</strong></p>
+          <p>U lead the way is just leading the way. Showing people that the people you look up to, you hold the same power as them. You’re no different from these niggas you say you’re looking up to. So go ahead and put yourself out there and do that shit the same way, or a different way, however way—just do something and don’t sit there and watch.</p>
+
+          <p><strong>Q: What made you start sharing your music online?</strong></p>
+          <p>My first song that I put out online was a diss, bro. I dissed like seventh grade, eighth grade, some shit like that. The school was lit. I became known as like the school-type rapper. Just started it, I guess.</p>
+
+          <p><strong>Q: What’s your process like when you create?</strong></p>
+          <p>I’ve learned now not to force it. I just sit down, listen to the song. If I feel it, I feel it. If I don’t, I won’t. I’ll delete shit and work on something else. When you force it, I don’t think it goes. So yeah, I try to keep it like that.</p>
+
+          <p><strong>Q: And with videos? How do you turn ideas into visuals?</strong></p>
+          <p>Tonique: Sometimes we’ll have a song, like a broad idea from when you hear the song—what direction you want it to go, what colors. But for the most part, it’s really about the videographer. I just linked up with my source Kiss. This nigga’s tough. He was just good vibes every time we were outside. On top of it, it just makes the video come out better.</p>
+
+          <p><strong>Q: Who are some artists you’ve been listening to lately?</strong></p>
+          <p>Tonique: Last year my top was Cena, my boy Cena. We got a couple collabs. Yapo JJ, JJK—he’s good, feel-good music. I just put that shit on, I start vibing. Definitely I’ve been listening to that. Other than that, I’ve been on some crucified street, some electronic shit.</p>
+
+          <p><strong>Q: What influences you outside of music?</strong></p>
+          <p>Tonique: Probably just a whole bunch of nostalgic shit. Video games, like Midnight Club. That whole time period—I just wanna feel like when I was a kid again. All that shit I try to bring back.</p>
+
+          <p><strong>Q: Do you have any upcoming projects?</strong></p>
+          <p>Tonique: I got a tape coming up. I haven’t named it yet, working on the name. The songs are ready. Everything’s just getting mixed. Cover art’s there, working on the name. I have a song called “Inauguration.” We got a couple videos for it, at least two or three. It’s a full tape, at least like eight songs.</p>
+
+          <p><strong>Q: What’s your vision moving forward?</strong></p>
+          <p>Tonique: I want to keep testing the boundaries. I feel like I’ve been kind of ahead of niggas in terms of experimenting with sound. I held back in recent years on my experimentation because of confidence. But now confidence is at an all-time high. Just keep experimenting, keep pushing the boundaries. Niggas gonna have their own sound. It’s just gonna be you, a little bit different in the next couple of years.</p>
+        </div>
+      </div>
+
+      <!-- STORY: Sterling Ruby -->
+      <div class="story">
+        <img class="story-strip" src="images/SRSKULL.jpg" alt="Sterling Ruby's Skulls"
+             onclick="toggleStory('story-ruby')">
+
+        <div class="story-meta">
+          <div class="story-title">Sterling Ruby’s Skulls</div>
+          <div class="story-byline">By Aidan Anthaume</div>
+        </div>
+
+        <div class="story-body" id="story-ruby">
+          <div class="story-close-row">
+            <button class="btn" onclick="closeStory('story-ruby')">Close</button>
+          </div>
+
+          <h3>Sterling Ruby’s Skulls</h3>
+          <p><em>Photo credit: Robert Wedemeyer</em></p>
+
+          <p>Sterling Ruby’s SKULL series comprises oversized sculptures (roughly 30–38 in.) crafted from resin, urethane, fiberglass, aluminum and synthetic yarn. Debuted in 2018 at his <em>Damnation</em> exhibition at Sprüth Magers in Los Angeles, these grotesque totem-like heads feature animalistic eye-orbs, fang-like teeth and flamboyant yarn “wigs.”</p>
+
+          <p>Initially whimsical, Ruby’s skulls reveal a deeper commentary on state power and confinement. They serve as distorted funhouse mirrors reflecting our collective fixation on fear and security—fear used to justify the compartmentalization of bodies behind concrete and barbed wire.</p>
+
+          <p>At <em>Damnation</em>’s core was <em>STATE</em> (2019), a 33-minute aerial video documenting California’s 35 adult state prisons, set to rhythmic percussion. The aerial perspective underscores the geography of control—vast landscapes bisected by unsettlingly regimented structures.</p>
+
+          <p>Together, the video and sculptures form a potent allegory: prisons as authoritarian monoliths in rural isolation, skulls as playful yet sinister artifacts of repression. Ruby’s work invites viewers to reconsider how modern America encloses not just bodies, but psyches, by transforming monumental sites of confinement into distorted cultural icons.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EXTRA PANEL -->
+    <div class="panel hidden" id="panel-extra">
+  <!-- EXTRA: Video at top -->
+  <div class="video-block" id="extra-video">
+    <h3>Mandeaux Interview</h3>
+    <div class="video-embed">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/UWxweVQX6Ik?rel=0"
+        title="Mandeaux Interview"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin">
+      </iframe>
+    </div>
+  </div>
+
+      <div class="extra-grid">
+        <div class="extra-menu">
+          <h3>Extra</h3>
+          <button onclick="loadPost('post1')">Well Hidden Indian Mounds</button>
+          <button onclick="loadPost('post2')">Skulls</button>
+          <button onclick="loadPost('post3')">WINDOWS 93</button>
+          <button onclick="loadPost('post4')">Wplace</button>
+          <button onclick="loadPost('post5')">Post 5 (N/A)</button>
+        </div>
+
+        <div class="extra-content" id="post-content">
+          <h2>Select a post</h2>
+          <p>Click a post on the left.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYSTEMS / DRAW PAD (kept, styled) -->
+    <div class="systems-box" id="systems-box">
+      <div class="systems-header">
+        <div class="systems-title">AlternativEnergy Blog Systems</div>
+        <div class="systems-users">Users online: <strong id="users-online-count-2">--</strong></div>
+      </div>
+
+      <div style="font-size:12px; border:1px dashed #0033cc; background:#f2f8ff; padding:8px 10px;">
+        Draw pad (local only). This doesn’t save anywhere.
+      </div>
+
+      <canvas id="draw-canvas"></canvas>
+    </div>
+
+  <script>
+    /* =========================
+       TABS
+       ========================= */
+    function switchTab(which, skipHashUpdate = false) {
+  const tabStories = document.getElementById('tab-stories');
+  const tabExtra = document.getElementById('tab-extra');
+  const panelStories = document.getElementById('panel-stories');
+  const panelExtra = document.getElementById('panel-extra');
+  const systemsBox = document.getElementById('systems-box');
+
+  const target = (which || '').toLowerCase() === 'extra' ? 'extra' : 'stories';
+
+  // Clear both first (prevents “wrong one stays blue” bugs)
+  tabStories.classList.remove('active');
+  tabExtra.classList.remove('active');
+
+  if (target === 'stories') {
+    tabStories.classList.add('active');
+    panelStories.classList.remove('hidden');
+    panelExtra.classList.add('hidden');
+    if (systemsBox) systemsBox.style.display = '';
+  } else {
+    tabExtra.classList.add('active');
+    panelExtra.classList.remove('hidden');
+    panelStories.classList.add('hidden');
+    if (systemsBox) systemsBox.style.display = 'none';
+  }
+
+  // Update URL hash when user clicks tabs (but not during init)
+  if (!skipHashUpdate) {
+    history.replaceState(null, '', '#' + target);
+  }
+}
+
+// Set correct tab on first load and when hash changes (refresh-proof)
+function initTabsFromHash() {
+  const hash = (location.hash || '#stories').replace('#', '');
+  switchTab(hash, true);
+}
+
+document.addEventListener('DOMContentLoaded', initTabsFromHash);
+window.addEventListener('hashchange', initTabsFromHash);
+
+    /* =========================
+       STORIES: TOGGLE BELOW STRIP
+       (Closes other stories for clean “drop-down”)
+       ========================= */
+    function toggleStory(id) {
+      const all = document.querySelectorAll('.story-body');
+      const target = document.getElementById(id);
+      const isOpen = target.classList.contains('open');
+
+      all.forEach(el => el.classList.remove('open'));
+      if (!isOpen) {
+        target.classList.add('open');
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function closeStory(id) {
+      const target = document.getElementById(id);
+      target.classList.remove('open');
+    }
+
+    /* =========================
+       EXTRA POSTS
+       (normalized ids: post1, post2, post3, post4, post5)
+       ========================= */
+    function loadPost(postId) {
+      let content = '';
+
+      if (postId === 'post1') {
+        content = `
+          <h2>Unphotographed Louisiana Indian Mounds</h2>
+
+          <h3>Frogmore Mound</h3>
+          <img src="images/FrogmoreSign.JPG" alt="Frogmore Sign">
+          <img src="images/FrogmoreMound1.JPG" alt="Frogmore Mound 1">
+          <img src="images/FrogmoreMound2.JPG" alt="Frogmore Mound 2">
+
+          <h3>Elkhorn Mound</h3>
+          <img src="images/ElkhornSign.JPG" alt="Elkhorn Sign">
+          <img src="images/ElkhornMound1.JPG" alt="Elkhorn Mound 1">
+          <img src="images/ElkhornMound2.JPG" alt="Elkhorn Mound 2">
+        `;
+      } else if (postId === 'post2') {
+        content = `
+          <h2>Skulls</h2>
+          <img src="images/SR1.jpg" alt="Sterling Ruby Skull 1">
+          <img src="images/SR3.png" alt="Sterling Ruby Skull 2">
+        `;
+      } else if (postId === 'post3') {
+        content = `
+          <h2>Windows 93</h2>
+          <p>
+            WINDOWS93:
+            <a href="https://www.windows93.net/" target="_blank" rel="noopener">https://www.windows93.net/</a>
+          </p>
+        `;
+      } else if (postId === 'post4') {
+        content = `
+          <h2>Wplace</h2>
+          <p>
+            Wplace:
+            <a href="https://wplace.live" target="_blank" rel="noopener">https://wplace.live</a>
+          </p>
+        `;
+      } else {
+        content = `
+          <h2>Post 5</h2>
+          <p>N/A</p>
+        `;
+      }
+
+      document.getElementById('post-content').innerHTML = content;
+    }
+
+    /* =========================
+       USERS ONLINE (fake)
+       shown in two places
+       ========================= */
+    const users1 = document.getElementById('users-online-count');
+    const users2 = document.getElementById('users-online-count-2');
+
+    function updateUsersOnline() {
+      const count = Math.floor(Math.random() * 3); // 0–2
+      users1.textContent = count;
+      users2.textContent = count;
+    }
+
+    updateUsersOnline();
+    setInterval(updateUsersOnline, 6 * 1000); // every 6 seconds
+
+    /* =========================
+       DRAW PAD (local only)
+       ========================= */
+    const drawCanvas = document.getElementById('draw-canvas');
+    if (drawCanvas) {
+      const ctx = drawCanvas.getContext('2d');
+
+      function resizeCanvas() {
+        const rect = drawCanvas.getBoundingClientRect();
+        drawCanvas.width = rect.width;
+        drawCanvas.height = rect.height;
+      }
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      let drawing = false;
+      let lastX = 0, lastY = 0;
+
+      function startDraw(x, y) {
+        drawing = true;
+        lastX = x; lastY = y;
+      }
+
+      function drawTo(x, y) {
+        if (!drawing) return;
+        ctx.strokeStyle = '#0a0c18';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'square'; // sharper feel
+
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        lastX = x; lastY = y;
+      }
+
+      function endDraw() { drawing = false; }
+
+      drawCanvas.addEventListener('mousedown', e => {
+        const rect = drawCanvas.getBoundingClientRect();
+        startDraw(e.clientX - rect.left, e.clientY - rect.top);
+      });
+
+      drawCanvas.addEventListener('mousemove', e => {
+        const rect = drawCanvas.getBoundingClientRect();
+        drawTo(e.clientX - rect.left, e.clientY - rect.top);
+      });
+
+      drawCanvas.addEventListener('mouseup', endDraw);
+      drawCanvas.addEventListener('mouseleave', endDraw);
+
+      drawCanvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        const t = e.touches[0];
+        const rect = drawCanvas.getBoundingClientRect();
+        startDraw(t.clientX - rect.left, t.clientY - rect.top);
+      }, { passive: false });
+
+      drawCanvas.addEventListener('touchmove', e => {
+        e.preventDefault();
+        const t = e.touches[0];
+        const rect = drawCanvas.getBoundingClientRect();
+        drawTo(t.clientX - rect.left, t.clientY - rect.top);
+      }, { passive: false });
+
+      drawCanvas.addEventListener('touchend', e => {
+        e.preventDefault();
+        endDraw();
+      }, { passive: false });
+    }
+  </script>
+</body>
+</html>
